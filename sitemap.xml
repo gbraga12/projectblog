@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://gbraga12.github.io/projectblog/posts/info.html</loc>
+    <lastmod>2023-03-19T18:08:37.173Z</lastmod>
+  </url>
+  <url>
     <loc>https://gbraga12.github.io/projectblog/posts/Introduction.html</loc>
-    <lastmod>2023-03-19T18:02:35.626Z</lastmod>
+    <lastmod>2023-03-19T18:08:37.765Z</lastmod>
   </url>
   <url>
     <loc>https://gbraga12.github.io/projectblog/about.html</loc>
-    <lastmod>2023-03-19T18:02:36.067Z</lastmod>
+    <lastmod>2023-03-19T18:08:38.203Z</lastmod>
   </url>
   <url>
     <loc>https://gbraga12.github.io/projectblog/index.html</loc>
-    <lastmod>2023-03-19T18:02:36.552Z</lastmod>
+    <lastmod>2023-03-19T18:08:38.766Z</lastmod>
   </url>
 </urlset>
