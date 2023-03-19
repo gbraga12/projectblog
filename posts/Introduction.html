@@ -6,10 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Harlow Malloc">
-<meta name="dcterms.date" content="2023-03-06">
+<meta name="author" content="Gianna Braga">
+<meta name="dcterms.date" content="2023-03-20">
 
-<title>projectblog - Post With Code</title>
+<title>projectblog - Cervical Cancer Risk Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -171,10 +171,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Post With Code</h1>
+      <h1 class="title">Cervical Cancer Risk Analysis</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">news</div>
-                <div class="quarto-category">code</div>
+                <div class="quarto-category">women’s health</div>
+                <div class="quarto-category">data science</div>
                 <div class="quarto-category">analysis</div>
               </div>
                   </div>
@@ -186,14 +186,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div>
       <div class="quarto-title-meta-heading">Author</div>
       <div class="quarto-title-meta-contents">
-               <p>Harlow Malloc </p>
+               <p>Gianna Braga </p>
             </div>
     </div>
       
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">March 6, 2023</p>
+        <p class="date">March 20, 2023</p>
       </div>
     </div>
     
@@ -211,40 +211,178 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<p>This is a post with executable code.</p>
+<p>This blog post is a summary of my final project for DH140.</p>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p><strong>Dataset Source</strong>: https://archive.ics.uci.edu/ml/datasets/Cervical+cancer+%28Risk+Factors%29</p>
-<p>I will be analyzing data on cervical cancer risk factors. The researchers surveyed almost 900 women at the the University Hospital of Caracas in Caracas, Venezuela. The dataset includes numerical information such as the age of participants, number of sexual partners, or years using hormonal contraceptives and boolean information such as does the participant smoke, have HPV, or use an IUD.</p>
-<p>I wanted to investigate this topic because as a woman, women’s health is important to me. Women with health concerns are often discredited and their concerns ignored. It is all to common to hear stories of women going to their doctor for help and being told they’re wrong or overreacting, only to find out later their condition was as serious as they had thought and the doctor was wrong. It is important for women to be aware of behaviors that could be putting them at risk to protect themselves or to be able to recognize when their symptoms could be part of a bigger issue. The sooner a health condition is caught, especially one as serious as cancer, the sooner treatment can begin, and the better odds someone has of recovering.</p>
-<p>In this project, I want to identify the behaviors most closely associated with getting cervical cancer and if there are behaviors when combined, make the risk higher.</p>
+<p><strong>Dataset Source</strong>: Click <a href="https://archive.ics.uci.edu/ml/datasets/Cervical+cancer+%28Risk+Factors%29">here</a> to see the source of my data.</p>
+<p>I will be analyzing data on cervical cancer risk factors. The researchers surveyed almost 900 women at the University Hospital of Caracas in Caracas, Venezuela. The dataset includes numerical information such as the age of participants, number of sexual partners, or years using hormonal contraceptives and boolean information such as does the participant smoke, have HPV, or use an IUD.</p>
+<p>I wanted to investigate this topic because as a woman, women’s health is important to me. Women with health concerns are often discredited and their concerns ignored. It is all too common to hear stories of women going to their doctor for help and being told they’re wrong or overreacting, only to find out later their condition was as serious as they had thought and the doctor was wrong. In fact, 83% of women say they have felt discriminated against by doctors due to their gender (Pagán). It is important for women to be aware of behaviors that could be putting them at risk to protect themselves or to be able to recognize when their symptoms could be part of a bigger issue. The sooner a health condition is caught, especially one as serious as cancer, the sooner treatment can begin, and the better odds someone has of recovering.</p>
+<p>In this project, I want to identify the risk factors that are most closely associated with getting cervical cancer.</p>
 </section>
-<section id="data-information" class="level1">
-<h1>Data Information</h1>
-<div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="methods" class="level1">
+<h1>Methods</h1>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statistics <span class="im">as</span> st</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/gbraga12/DH140-FinalProject/main/cervical_cancer_risk_factors.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rawdata <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/gbraga12/DH140-FinalProject/main/cervical_cancer_risk_factors.csv'</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/gbraga12/DH140-FinalProject/main/cervical_cancer_risk_factors.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="initial-processing" class="level3">
-<h3 class="anchored" data-anchor-id="initial-processing">Initial Processing</h3>
-<div class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Change ? in dataset to None</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> data:</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    data.loc[data[i] <span class="op">==</span> <span class="st">'?'</span>, i] <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<p>To begin my analysis, I had to edit the data from the csv file. The authors had used ‘?’ to denote information they did not have. These values are not simple to work with so I needed to change them. I attempted to change them to None values, which is recognized as a null value.</p>
+<p>However, I also needed to change all the datatypes to integers. The authors had originally denoted some values as boolean but that did not transfer over to my Jupyter notebook in a way that I could easily use. By turning all the values into integers, it was simple to use the data as I wished. This caused an issue with my None values though. I could not do the data processing I because I could not figure out how to get around the None values. I tried using .isnull or == None, but nothing I tried would cause the script to ignore the values.</p>
+<p>In the end, I set all the “?” values to zero. I determined that doing so did not change my average values significantly so I decided it was an acceptable assumption. It is important to note that for a few women, the data set will show 0 for their age at their first sexual experience. This is due to my editing and I will ignore these values when I examine that data.</p>
+<div class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Change ? in dataset to Zero</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> rawdata:</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    data.loc[rawdata[i] <span class="op">==</span> <span class="st">'?'</span>, i] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert at column datatypes into int</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>columns <span class="op">=</span> data.columns</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> columns:</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    data[j] <span class="op">=</span> pd.to_numeric(data[j])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="data-statistics" class="level3">
-<h3 class="anchored" data-anchor-id="data-statistics">Data Statistics</h3>
-<div class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="28">
+<section id="data-information" class="level3">
+<h3 class="anchored" data-anchor-id="data-information">Data Information</h3>
+<p>I utilized data statistics to get a quick overview of the data I was working with and to ensure that the values I was seeing made sense. Before I removed the ‘?’ values and converted everything to integers, much of the information did not show up correctly. It was easy to address these errors when I could see them all laid out in front of me.</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>rawdata.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Age</th>
+      <th>STDs: Number of diagnosis</th>
+      <th>Dx:Cancer</th>
+      <th>Dx:CIN</th>
+      <th>Dx:HPV</th>
+      <th>Dx</th>
+      <th>Hinselmann</th>
+      <th>Schiller</th>
+      <th>Citology</th>
+      <th>Biopsy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>858.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>26.820513</td>
+      <td>0.087413</td>
+      <td>0.020979</td>
+      <td>0.010490</td>
+      <td>0.020979</td>
+      <td>0.027972</td>
+      <td>0.040793</td>
+      <td>0.086247</td>
+      <td>0.051282</td>
+      <td>0.064103</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>8.497948</td>
+      <td>0.302545</td>
+      <td>0.143398</td>
+      <td>0.101939</td>
+      <td>0.143398</td>
+      <td>0.164989</td>
+      <td>0.197925</td>
+      <td>0.280892</td>
+      <td>0.220701</td>
+      <td>0.245078</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>13.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>20.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>25.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>32.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>84.000000</td>
+      <td>3.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
 
 <div>
 
@@ -279,18 +417,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <tr>
       <th>count</th>
       <td>858.000000</td>
-      <td>832.000000</td>
-      <td>851.000000</td>
-      <td>802.000000</td>
-      <td>845.000000</td>
-      <td>845.000000</td>
-      <td>845.000000</td>
-      <td>750.000000</td>
-      <td>750.000000</td>
-      <td>741.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
       <td>...</td>
-      <td>71.000000</td>
-      <td>71.000000</td>
+      <td>858.000000</td>
+      <td>858.000000</td>
       <td>858.000000</td>
       <td>858.000000</td>
       <td>858.000000</td>
@@ -303,18 +441,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <tr>
       <th>mean</th>
       <td>26.820513</td>
-      <td>2.527644</td>
-      <td>16.995300</td>
-      <td>2.275561</td>
-      <td>0.145562</td>
-      <td>1.219721</td>
-      <td>0.453144</td>
-      <td>0.641333</td>
-      <td>2.256419</td>
-      <td>0.112011</td>
+      <td>2.451049</td>
+      <td>16.856643</td>
+      <td>2.127040</td>
+      <td>0.143357</td>
+      <td>1.201241</td>
+      <td>0.446278</td>
+      <td>0.560606</td>
+      <td>1.972394</td>
+      <td>0.096737</td>
       <td>...</td>
-      <td>6.140845</td>
-      <td>5.816901</td>
+      <td>0.508159</td>
+      <td>0.481352</td>
       <td>0.020979</td>
       <td>0.010490</td>
       <td>0.020979</td>
@@ -327,18 +465,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <tr>
       <th>std</th>
       <td>8.497948</td>
-      <td>1.667760</td>
-      <td>2.803355</td>
-      <td>1.447414</td>
-      <td>0.352876</td>
-      <td>4.089017</td>
-      <td>2.226610</td>
-      <td>0.479929</td>
-      <td>3.764254</td>
-      <td>0.315593</td>
+      <td>1.698528</td>
+      <td>3.183491</td>
+      <td>1.508108</td>
+      <td>0.350641</td>
+      <td>4.060623</td>
+      <td>2.210351</td>
+      <td>0.496603</td>
+      <td>3.597888</td>
+      <td>0.295771</td>
       <td>...</td>
-      <td>5.895024</td>
-      <td>5.755271</td>
+      <td>2.388333</td>
+      <td>2.297125</td>
       <td>0.143398</td>
       <td>0.101939</td>
       <td>0.143398</td>
@@ -351,8 +489,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <tr>
       <th>min</th>
       <td>13.000000</td>
-      <td>1.000000</td>
-      <td>10.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
@@ -361,8 +499,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <td>0.000000</td>
       <td>0.000000</td>
       <td>...</td>
-      <td>1.000000</td>
-      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
@@ -375,7 +513,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <tr>
       <th>25%</th>
       <td>20.000000</td>
-      <td>2.000000</td>
+      <td>1.000000</td>
       <td>15.000000</td>
       <td>1.000000</td>
       <td>0.000000</td>
@@ -385,8 +523,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <td>0.000000</td>
       <td>0.000000</td>
       <td>...</td>
-      <td>2.000000</td>
-      <td>2.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
@@ -406,11 +544,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <td>0.000000</td>
       <td>0.000000</td>
       <td>1.000000</td>
-      <td>0.500000</td>
+      <td>0.250000</td>
       <td>0.000000</td>
       <td>...</td>
-      <td>4.000000</td>
-      <td>3.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
@@ -430,11 +568,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <td>0.000000</td>
       <td>0.000000</td>
       <td>1.000000</td>
-      <td>3.000000</td>
+      <td>2.000000</td>
       <td>0.000000</td>
       <td>...</td>
-      <td>8.000000</td>
-      <td>7.500000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
@@ -474,74 +612,475 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </div>
+<p>Based on the title of the dataset, “Cervical Cancer Risk Factors”, I initially wanted to analyze how the studied behaviors and diagnoses affected the likelihood of developing cervical cancer. However, when looking at the data statistics it can be seen that only about 1% of the patients were diagnosed with CIN and 2% with cancer. That is too small of a population to analyze and draw conclusions from. I decided to pivot my exploration. In the the following Analysis section, I will explore the relationship between the risk factors surveyed for, STDs contraction rates, and medical testing for cervical cancer.</p>
 </section>
-<section id="exploratory-data-visualizations" class="level3">
-<h3 class="anchored" data-anchor-id="exploratory-data-visualizations">Exploratory Data Visualizations</h3>
-<div class="cell" data-execution_count="33">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data.plot(y <span class="op">=</span> <span class="st">'Age'</span>, kind <span class="op">=</span> <span class="st">'hist'</span>, bins <span class="op">=</span> <span class="dv">80</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="33">
-<pre><code>&lt;AxesSubplot: ylabel='Frequency'&gt;</code></pre>
+</section>
+<section id="analysis" class="level1">
+<h1>Analysis</h1>
+<section id="risk-factors-vs-std-contraction" class="level3">
+<h3 class="anchored" data-anchor-id="risk-factors-vs-std-contraction">Risk Factors vs STD Contraction</h3>
+<p>The first thing I wanted to delve deeper into was the percentage of women diagnosed with the various STDs the doctors were surveying for. This was done by making a dataset of these values and graphing them on a bar chart so it was easy to tell which were the most common and by how much. The bar chart shows condylomatosis, vulvo-perineal condylomatosis, and HIV being the most common STDs reported.</p>
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>percentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">'STD'</span>: [<span class="st">'condylomatosis'</span>,<span class="st">'cervical condylomatosis'</span>,<span class="st">'vaginal condylomatosis'</span>,<span class="st">'vulvo-perineal condylomatosis'</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'syphilis'</span>,<span class="st">'pelvic inflammatory disease'</span>,<span class="st">'genital herpes'</span>,<span class="st">'molluscum contagiosum'</span>,<span class="st">'AIDS'</span>,<span class="st">'HIV'</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'Hepatitis B'</span>,<span class="st">'HPV'</span>],</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Percentage'</span>: [data.loc[:, <span class="st">'STDs:condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>, data.loc[:,<span class="st">'STDs:cervical condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                             data.loc[:, <span class="st">'STDs:vaginal condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,data.loc[:,<span class="st">'STDs:vulvo-perineal condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                             data.loc[:, <span class="st">'STDs:syphilis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,data.loc[:,<span class="st">'STDs:pelvic inflammatory disease'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                             data.loc[:,<span class="st">'STDs:genital herpes'</span>].mean()<span class="op">*</span><span class="dv">100</span>,data.loc[:,<span class="st">'STDs:molluscum contagiosum'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                             data.loc[:, <span class="st">'STDs:AIDS'</span>].mean()<span class="op">*</span><span class="dv">100</span>,data.loc[:,<span class="st">'STDs:HIV'</span>].mean()<span class="op">*</span><span class="dv">100</span>,data.loc[:,<span class="st">'STDs:Hepatitis B'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                             data.loc[:, <span class="st">'STDs:HPV'</span>].mean()<span class="op">*</span><span class="dv">100</span>]})</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>percentages.plot(x <span class="op">=</span> <span class="st">'STD'</span>, y <span class="op">=</span> <span class="st">'Percentage'</span>, kind <span class="op">=</span> <span class="st">'bar'</span>, ylabel <span class="op">=</span> <span class="st">'Percentage of Patients Diagnosed'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<pre><code>&lt;AxesSubplot: xlabel='STD', ylabel='Percentage of Patients Diagnosed'&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="Introduction_files/figure-html/cell-6-output-2.png" class="img-fluid"></p>
+<p><img src="Introduction_files/figure-html/cell-7-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="50">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>graphcolors <span class="op">=</span> []</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> data[<span class="st">'Dx:HPV'</span>]:</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> i <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        graphcolors.append(<span class="st">'yellow'</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        graphcolors.append(<span class="st">'black'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-execution_count="53">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data.plot(y <span class="op">=</span> <span class="st">'First sexual intercourse'</span>, kind <span class="op">=</span> <span class="st">'bar'</span>, label <span class="op">=</span> <span class="va">None</span>, color <span class="op">=</span> graphcolors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="53">
-<pre><code>&lt;AxesSubplot: &gt;</code></pre>
+<p>After getting an idea of what the total rates of STD contraction are in this survey, I looked at if individual risk factors led to higher or lower rates of STD contraction. I did this by making scatter plots with the frequency of the behaviors I was looking at plotted on the x axis and the number of STD diagnoses on the y axis.</p>
+<p>The first plot I made displayed the relationship between the number of sexual partners a patient had and the number of STDs they had been diagnosed with. The scatter plot shows for people diagnosed with at least one STD, a wide range of sexual partners had been had. Looking at the extremes, the patient who had the most sexual partners, has been diagnosed with no STDS. The patient with the most STDS had an average number of sexual partners. The plot’s randomness led me to conclude that the number of sexual partners did not have a significant effect on whether or not a person has an STD.</p>
+<div class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data.plot(x <span class="op">=</span> <span class="st">'Number of sexual partners'</span>, y <span class="op">=</span> <span class="st">'STDs (number)'</span>, kind <span class="op">=</span> <span class="st">'scatter'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<pre><code>&lt;AxesSubplot: xlabel='Number of sexual partners', ylabel='STDs (number)'&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="Introduction_files/figure-html/cell-8-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="59">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>trunc_data <span class="op">=</span> data.loc[(data[<span class="st">'Hormonal Contraceptives (years)'</span>] <span class="op">&gt;</span> <span class="fl">0.0</span>) <span class="op">&amp;</span> (data[<span class="st">'Hormonal Contraceptives (years)'</span>] <span class="op">!=</span> <span class="va">None</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                     ]</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>trunc_data.plot(x <span class="op">=</span> <span class="st">'Age'</span>, y <span class="op">=</span> <span class="st">'Hormonal Contraceptives (years)'</span>, kind <span class="op">=</span> <span class="st">'scatter'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="59">
-<pre><code>&lt;AxesSubplot: xlabel='Age', ylabel='Hormonal Contraceptives (years)'&gt;</code></pre>
+<p>To look more in depth at this, I grouped all the patients with the same number of diagnosed STDs and calculated their mean number of sexual partners, as can be seen below. The averages are all very close. Their closeness is supported by the significantly small standard deviation.</p>
+<div class="cell" data-execution_count="154">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>four <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>three <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>two <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>one <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>zero <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>fourc <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>threec <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>twoc <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>onec <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>zeroc <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(data.shape[<span class="dv">0</span>]):</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> data.loc[i,<span class="st">'STDs (number)'</span>] <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>        zero <span class="op">+=</span> data.loc[i,<span class="st">'Number of sexual partners'</span>]</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>        zeroc <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> data.loc[i,<span class="st">'STDs (number)'</span>] <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>        one <span class="op">+=</span> data.loc[i,<span class="st">'Number of sexual partners'</span>]</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>        onec <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> data.loc[i,<span class="st">'STDs (number)'</span>] <span class="op">==</span> <span class="dv">2</span>:</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        two <span class="op">+=</span> data.loc[i,<span class="st">'Number of sexual partners'</span>]</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>        twoc <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> data.loc[i,<span class="st">'STDs (number)'</span>] <span class="op">==</span> <span class="dv">3</span>:</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>        three <span class="op">+=</span> data.loc[i,<span class="st">'Number of sexual partners'</span>]</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>        threec <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> data.loc[i,<span class="st">'STDs (number)'</span>] <span class="op">==</span> <span class="dv">4</span>:</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>        four <span class="op">+=</span> data.loc[i,<span class="st">'Number of sexual partners'</span>]</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>        fourc <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Average # of sexual partners, zero STDs  ="</span>, zero<span class="op">/</span>zeroc)</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Average # of sexual partners, one STD    ="</span>, one<span class="op">/</span>onec)</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Average # of sexual partners, two STDs   ="</span>, two<span class="op">/</span>twoc)</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Average # of sexual partners, three STDs ="</span>, three<span class="op">/</span>threec)</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Average # of sexual partners, four STDs  ="</span>, four<span class="op">/</span>fourc)</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Standard deviation of averages = "</span>, st.stdev([zero<span class="op">/</span>zeroc,one<span class="op">/</span>onec,two<span class="op">/</span>twoc,three<span class="op">/</span>threec,four<span class="op">/</span>fourc]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Average # of sexual partners, zero STDs  = 2.418485237483954
+Average # of sexual partners, one STD    = 2.7941176470588234
+Average # of sexual partners, two STDs   = 2.864864864864865
+Average # of sexual partners, three STDs = 2.2857142857142856
+Average # of sexual partners, four STDs  = 2.0
+Standard deviation of averages =  0.360017622025848</code></pre>
 </div>
-<div class="cell-output cell-output-display">
-<p><img src="Introduction_files/figure-html/cell-9-output-2.png" class="img-fluid"></p>
 </div>
-</div>
-<div class="cell" data-execution_count="72">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>trunc_data <span class="op">=</span> data.loc[(data[<span class="st">'Smokes (years)'</span>] <span class="op">&gt;</span> <span class="fl">0.0</span>) <span class="op">&amp;</span> (data[<span class="st">'Smokes (years)'</span>] <span class="op">!=</span> <span class="va">None</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                     ]</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>trunc_data.plot(y <span class="op">=</span> <span class="st">'Smokes (years)'</span>, kind <span class="op">=</span> <span class="st">'box'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="72">
-<pre><code>&lt;AxesSubplot: &gt;</code></pre>
+<p>I then looked at the relationship between the age of the patient at the time of their first sexual experience and the number of STDs the patient had. An extra step was taken to ensure my edited data did not affect the graph. Similar to above, the graph seems random. Regardless of how many STDs the patients have been diagnosed with, the average age is similar.</p>
+<div class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>trunc_data <span class="op">=</span> data.loc[(data[<span class="st">'First sexual intercourse'</span>] <span class="op">&gt;</span> <span class="fl">0.0</span>)]</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>trunc_data.plot(x <span class="op">=</span> <span class="st">'First sexual intercourse'</span>, y <span class="op">=</span> <span class="st">'STDs (number)'</span>, kind <span class="op">=</span> <span class="st">'scatter'</span>, xlabel <span class="op">=</span> <span class="st">'Age of First Sexual Intercourse'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<pre><code>&lt;AxesSubplot: xlabel='Age of First Sexual Intercourse', ylabel='STDs (number)'&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="Introduction_files/figure-html/cell-10-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
-<section id="preliminary-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="preliminary-analysis">Preliminary Analysis</h3>
-<div class="cell" data-execution_count="70">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data.loc[:, <span class="st">'Dx:HPV'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="70">
-<pre><code>0.02097902097902098</code></pre>
+<section id="risks-vs-testing" class="level3">
+<h3 class="anchored" data-anchor-id="risks-vs-testing">Risks vs Testing</h3>
+<p>After not forming a strong relationship between the behaviors and STDs, I decided to examine a relationship between the various risks and if a test for cervical cancer was performed on the patient. First, I looked at what STDs patients who had biopsies were diagnosed with and compared it to the rate of diagnoses of patients who did not undergo a biopsy. To display this information I made a bar chart similar to the one I made earlier, where the x axis shows the various STDs and the y axis shows the percentage. From the graphic, it can be seen that patients who underwent biopsies had significantly higher rates of condylomatosis, vulvo-perineal condylomatosis, and HIV. These can be noted as risks for cervical cancer based on that graphic.</p>
+<div class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>biopsydata <span class="op">=</span> data.loc[(data[<span class="st">'Biopsy'</span>]<span class="op">==</span><span class="dv">1</span>)]</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>nobiopsydata <span class="op">=</span> data.loc[(data[<span class="st">'Biopsy'</span>]<span class="op">==</span><span class="dv">0</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>biopsystdpercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">'STD'</span>: [<span class="st">'condylomatosis'</span>,<span class="st">'cervical condylomatosis'</span>,<span class="st">'vaginal condylomatosis'</span>,<span class="st">'vulvo-perineal condylomatosis'</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'syphilis'</span>,<span class="st">'pelvic inflammatory disease'</span>,<span class="st">'genital herpes'</span>,<span class="st">'molluscum contagiosum'</span>,<span class="st">'AIDS'</span>,<span class="st">'HIV'</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'Hepatitis B'</span>,<span class="st">'HPV'</span>],</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Percentage'</span>: [biopsydata.loc[:, <span class="st">'STDs:condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>, biopsydata.loc[:,<span class="st">'STDs:cervical condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                             biopsydata.loc[:, <span class="st">'STDs:vaginal condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,biopsydata.loc[:,<span class="st">'STDs:vulvo-perineal condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>                             biopsydata.loc[:, <span class="st">'STDs:syphilis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,biopsydata.loc[:,<span class="st">'STDs:pelvic inflammatory disease'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>                             biopsydata.loc[:,<span class="st">'STDs:genital herpes'</span>].mean()<span class="op">*</span><span class="dv">100</span>,biopsydata.loc[:,<span class="st">'STDs:molluscum contagiosum'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>                             biopsydata.loc[:, <span class="st">'STDs:AIDS'</span>].mean()<span class="op">*</span><span class="dv">100</span>,biopsydata.loc[:,<span class="st">'STDs:HIV'</span>].mean()<span class="op">*</span><span class="dv">100</span>,biopsydata.loc[:,<span class="st">'STDs:Hepatitis B'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>                             biopsydata.loc[:, <span class="st">'STDs:HPV'</span>].mean()<span class="op">*</span><span class="dv">100</span>]})</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>nobiopsystdpercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>              <span class="st">'STD'</span>: [<span class="st">'condylomatosis'</span>,<span class="st">'cervical condylomatosis'</span>,<span class="st">'vaginal condylomatosis'</span>,<span class="st">'vulvo-perineal condylomatosis'</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'syphilis'</span>,<span class="st">'pelvic inflammatory disease'</span>,<span class="st">'genital herpes'</span>,<span class="st">'molluscum contagiosum'</span>,<span class="st">'AIDS'</span>,<span class="st">'HIV'</span>,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'Hepatitis B'</span>,<span class="st">'HPV'</span>],</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Percentage'</span>: [nobiopsydata.loc[:, <span class="st">'STDs:condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>, nobiopsydata.loc[:,<span class="st">'STDs:cervical condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>                             nobiopsydata.loc[:, <span class="st">'STDs:vaginal condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,nobiopsydata.loc[:,<span class="st">'STDs:vulvo-perineal condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>                             nobiopsydata.loc[:, <span class="st">'STDs:syphilis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,nobiopsydata.loc[:,<span class="st">'STDs:pelvic inflammatory disease'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>                             nobiopsydata.loc[:,<span class="st">'STDs:genital herpes'</span>].mean()<span class="op">*</span><span class="dv">100</span>,nobiopsydata.loc[:,<span class="st">'STDs:molluscum contagiosum'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>                             nobiopsydata.loc[:, <span class="st">'STDs:AIDS'</span>].mean()<span class="op">*</span><span class="dv">100</span>,nobiopsydata.loc[:,<span class="st">'STDs:HIV'</span>].mean()<span class="op">*</span><span class="dv">100</span>,nobiopsydata.loc[:,<span class="st">'STDs:Hepatitis B'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>                             nobiopsydata.loc[:, <span class="st">'STDs:HPV'</span>].mean()<span class="op">*</span><span class="dv">100</span>]})</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>X_axis <span class="op">=</span> np.arange(biopsystdpercentages.shape[<span class="dv">0</span>])</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">-</span> <span class="fl">0.2</span>, biopsystdpercentages[<span class="st">'Percentage'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'Biopsy'</span>)</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">+</span> <span class="fl">0.2</span>, nobiopsystdpercentages[<span class="st">'Percentage'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'No Biopsy'</span>)</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>plt.xticks(X_axis, biopsystdpercentages[<span class="st">'STD'</span>])</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="st">'vertical'</span>)</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Percent of Patients Diagnosed'</span>)</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Introduction_files/figure-html/cell-12-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<p>Using the above line of code, it is determined that 2% of the women surveyed have been diagnosed with cervical cancer. A graphic I would like to make is find the percentages of women have each of the STDs the researchers were looking for a make a bar chart showing them.</p>
-<p>I would also like to make graphs showing women’s risk factors and highlighting the women who have been diagnosed with an STD in another color. I attempted this in the visualizations section above, however it did not turn out very readable. I’ll have to find another way to accomplish this goal.</p>
-<p>To show how certain risk factors are more connected to different STDs, I’d like to make a network visualization of all the women diagnosed and what activities they participated in.</p>
-<p>A final visualization I would like to make is one using a heat map to show the correlation between risk activities and STDs. To do so, I will have to do some data processing and make some subjective decisions on what is risky. For example, the more seuxal partners someone has, the more likely someone is to get an STD. I will probably have to choose a number to be the crossover between a lower risk and higher risk number of partners.</p>
-
-
+<p>Next, I wanted to perform an analysis, similar to the first except on what I’m calling the “experience” information the patients. These risks include the patient’s age and number of sexual partners. The bar chart shows the average values for each group, biopsy or no, to be fairly similar. The average age for the group that underwent a biopsy is slightly higher, which makes sense because in general, people care about their health more as they’re older. Besides this slight discrepancy, the values are so close that it appears none of these factors influence the risk for cervical cancer.</p>
+<div class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>biopsydemopercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Experience'</span>: [<span class="st">'Age'</span>, <span class="st">'Number of sexual partners'</span>, <span class="st">'First sexual intercourse'</span>,<span class="st">'Num of pregnancies'</span>],</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Average'</span>: [biopsydata.loc[:, <span class="st">'Age'</span>].mean(), biopsydata.loc[:,<span class="st">'Number of sexual partners'</span>].mean(),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                             biopsydata.loc[:, <span class="st">'First sexual intercourse'</span>].mean(),biopsydata.loc[:,<span class="st">'Num of pregnancies'</span>].mean()]})</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>nobiopsydemopercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Experience'</span>: [<span class="st">'Age'</span>, <span class="st">'Number of sexual partners'</span>, <span class="st">'First sexual intercourse'</span>,<span class="st">'Num of pregnancies'</span>],</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Average'</span>: [nobiopsydata.loc[:, <span class="st">'Age'</span>].mean(), nobiopsydata.loc[:,<span class="st">'Number of sexual partners'</span>].mean(),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>                             nobiopsydata.loc[:, <span class="st">'First sexual intercourse'</span>].mean(),nobiopsydata.loc[:,<span class="st">'Num of pregnancies'</span>].mean()]})</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>X_axis <span class="op">=</span> np.arange(biopsydemopercentages.shape[<span class="dv">0</span>])</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">-</span> <span class="fl">0.2</span>, biopsydemopercentages[<span class="st">'Average'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'Biopsy'</span>)</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">+</span> <span class="fl">0.2</span>, nobiopsydemopercentages[<span class="st">'Average'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'No Biopsy'</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>plt.xticks(X_axis, biopsydemopercentages[<span class="st">'Experience'</span>])</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="st">'vertical'</span>)</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Average Value'</span>)</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Introduction_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Next I looked at some of the behavior differences between patients biopsied and not. From this bar chart, some interesting variance can be seen. The group that was biopsied has higher rates of smoking, using birth control (hormonal or IUD), and STDs. Given the bar chart, it can be infered that all these factors contribute to cervical cancer.</p>
+<div class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>biopsybhrpercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Behavior'</span>: [<span class="st">'Smokes'</span>,<span class="st">'Hormonal Contraceptives'</span>,<span class="st">'IUD'</span>,<span class="st">'STDs'</span>],</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Percentage'</span>: [biopsydata.loc[:, <span class="st">'Smokes'</span>].mean()<span class="op">*</span><span class="dv">100</span>,biopsydata.loc[:,<span class="st">'Hormonal Contraceptives'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                             biopsydata.loc[:,<span class="st">'IUD'</span>].mean()<span class="op">*</span><span class="dv">100</span>,biopsydata.loc[:,<span class="st">'STDs'</span>].mean()<span class="op">*</span><span class="dv">100</span>]})</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>nobiopsybhrpercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Behavior'</span>: [<span class="st">'Smokes'</span>,<span class="st">'Hormonal Contraceptives'</span>,<span class="st">'IUD'</span>,<span class="st">'STDs'</span>],</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Percentage'</span>: [nobiopsydata.loc[:, <span class="st">'Smokes'</span>].mean()<span class="op">*</span><span class="dv">100</span>,nobiopsydata.loc[:,<span class="st">'Hormonal Contraceptives'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                             nobiopsydata.loc[:,<span class="st">'IUD'</span>].mean()<span class="op">*</span><span class="dv">100</span>,nobiopsydata.loc[:,<span class="st">'STDs'</span>].mean()<span class="op">*</span><span class="dv">100</span>]})</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>X_axis <span class="op">=</span> np.arange(biopsybhrpercentages.shape[<span class="dv">0</span>])</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">-</span> <span class="fl">0.2</span>, biopsybhrpercentages[<span class="st">'Percentage'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'Biopsy'</span>)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">+</span> <span class="fl">0.2</span>, nobiopsybhrpercentages[<span class="st">'Percentage'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'No Biopsy'</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>plt.xticks(X_axis, biopsybhrpercentages[<span class="st">'Behavior'</span>])</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="st">'vertical'</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Percent of Patients Diagnosed'</span>)</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Introduction_files/figure-html/cell-14-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>To be thorough in my exploration of what risks lead to doctors checking for cervical cancer, I compared patients who underwent other tests for cervical cancer with patients who did not. These other tests are the Hinselmann test and the Schiller test. The results from the data analysis support the conclusions I came to after looking at the biopsy data. The factors that are more common in patients that were biopsied are the same for the patients that underwent other cervical cancer tests. The bar charts that display this data are all below.</p>
+<div class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Hinselmanndata <span class="op">=</span> data.loc[(data[<span class="st">'Hinselmann'</span>]<span class="op">==</span><span class="dv">1</span>)]</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>noHinselmanndata <span class="op">=</span> data.loc[(data[<span class="st">'Hinselmann'</span>]<span class="op">==</span><span class="dv">0</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Hinselmannstdpercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">'STD'</span>: [<span class="st">'condylomatosis'</span>,<span class="st">'cervical condylomatosis'</span>,<span class="st">'vaginal condylomatosis'</span>,<span class="st">'vulvo-perineal condylomatosis'</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'syphilis'</span>,<span class="st">'pelvic inflammatory disease'</span>,<span class="st">'genital herpes'</span>,<span class="st">'molluscum contagiosum'</span>,<span class="st">'AIDS'</span>,<span class="st">'HIV'</span>,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'Hepatitis B'</span>,<span class="st">'HPV'</span>],</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Percentage'</span>: [Hinselmanndata.loc[:, <span class="st">'STDs:condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>, Hinselmanndata.loc[:,<span class="st">'STDs:cervical condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                             Hinselmanndata.loc[:, <span class="st">'STDs:vaginal condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,Hinselmanndata.loc[:,<span class="st">'STDs:vulvo-perineal condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>                             Hinselmanndata.loc[:, <span class="st">'STDs:syphilis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,Hinselmanndata.loc[:,<span class="st">'STDs:pelvic inflammatory disease'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>                             Hinselmanndata.loc[:,<span class="st">'STDs:genital herpes'</span>].mean()<span class="op">*</span><span class="dv">100</span>,Hinselmanndata.loc[:,<span class="st">'STDs:molluscum contagiosum'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>                             Hinselmanndata.loc[:, <span class="st">'STDs:AIDS'</span>].mean()<span class="op">*</span><span class="dv">100</span>,Hinselmanndata.loc[:,<span class="st">'STDs:HIV'</span>].mean()<span class="op">*</span><span class="dv">100</span>,Hinselmanndata.loc[:,<span class="st">'STDs:Hepatitis B'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>                             Hinselmanndata.loc[:, <span class="st">'STDs:HPV'</span>].mean()<span class="op">*</span><span class="dv">100</span>]})</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>noHinselmannstdpercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>              <span class="st">'STD'</span>: [<span class="st">'condylomatosis'</span>,<span class="st">'cervical condylomatosis'</span>,<span class="st">'vaginal condylomatosis'</span>,<span class="st">'vulvo-perineal condylomatosis'</span>,</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'syphilis'</span>,<span class="st">'pelvic inflammatory disease'</span>,<span class="st">'genital herpes'</span>,<span class="st">'molluscum contagiosum'</span>,<span class="st">'AIDS'</span>,<span class="st">'HIV'</span>,</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'Hepatitis B'</span>,<span class="st">'HPV'</span>],</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Percentage'</span>: [noHinselmanndata.loc[:, <span class="st">'STDs:condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>, noHinselmanndata.loc[:,<span class="st">'STDs:cervical condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>                             noHinselmanndata.loc[:, <span class="st">'STDs:vaginal condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,noHinselmanndata.loc[:,<span class="st">'STDs:vulvo-perineal condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>                             noHinselmanndata.loc[:, <span class="st">'STDs:syphilis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,noHinselmanndata.loc[:,<span class="st">'STDs:pelvic inflammatory disease'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>                             noHinselmanndata.loc[:,<span class="st">'STDs:genital herpes'</span>].mean()<span class="op">*</span><span class="dv">100</span>,noHinselmanndata.loc[:,<span class="st">'STDs:molluscum contagiosum'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>                             noHinselmanndata.loc[:, <span class="st">'STDs:AIDS'</span>].mean()<span class="op">*</span><span class="dv">100</span>,noHinselmanndata.loc[:,<span class="st">'STDs:HIV'</span>].mean()<span class="op">*</span><span class="dv">100</span>,noHinselmanndata.loc[:,<span class="st">'STDs:Hepatitis B'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>                             noHinselmanndata.loc[:, <span class="st">'STDs:HPV'</span>].mean()<span class="op">*</span><span class="dv">100</span>]})</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>X_axis <span class="op">=</span> np.arange(Hinselmannstdpercentages.shape[<span class="dv">0</span>])</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">-</span> <span class="fl">0.2</span>, Hinselmannstdpercentages[<span class="st">'Percentage'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'Hinselmann'</span>)</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">+</span> <span class="fl">0.2</span>, noHinselmannstdpercentages[<span class="st">'Percentage'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'No Hinselmann'</span>)</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>plt.xticks(X_axis, Hinselmannstdpercentages[<span class="st">'STD'</span>])</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="st">'vertical'</span>)</span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Percent of Patients Diagnosed'</span>)</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Introduction_files/figure-html/cell-16-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>Hinselmanndemopercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Experience'</span>: [<span class="st">'Age'</span>, <span class="st">'Number of sexual partners'</span>, <span class="st">'First sexual intercourse'</span>,<span class="st">'Num of pregnancies'</span>],</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Average'</span>: [Hinselmanndata.loc[:, <span class="st">'Age'</span>].mean(), Hinselmanndata.loc[:,<span class="st">'Number of sexual partners'</span>].mean(),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                             Hinselmanndata.loc[:, <span class="st">'First sexual intercourse'</span>].mean(),Hinselmanndata.loc[:,<span class="st">'Num of pregnancies'</span>].mean()]})</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>noHinselmanndemopercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Experience'</span>: [<span class="st">'Age'</span>, <span class="st">'Number of sexual partners'</span>, <span class="st">'First sexual intercourse'</span>,<span class="st">'Num of pregnancies'</span>],</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Average'</span>: [noHinselmanndata.loc[:, <span class="st">'Age'</span>].mean(), noHinselmanndata.loc[:,<span class="st">'Number of sexual partners'</span>].mean(),</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                             noHinselmanndata.loc[:, <span class="st">'First sexual intercourse'</span>].mean(),noHinselmanndata.loc[:,<span class="st">'Num of pregnancies'</span>].mean()]})</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>X_axis <span class="op">=</span> np.arange(Hinselmanndemopercentages.shape[<span class="dv">0</span>])</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">-</span> <span class="fl">0.2</span>, Hinselmanndemopercentages[<span class="st">'Average'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'Hinselmann'</span>)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">+</span> <span class="fl">0.2</span>, noHinselmanndemopercentages[<span class="st">'Average'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'No Hinselmann'</span>)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>plt.xticks(X_axis, Hinselmanndemopercentages[<span class="st">'Experience'</span>])</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="st">'vertical'</span>)</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Average Value'</span>)</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Introduction_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Hinselmannbhrpercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Behavior'</span>: [<span class="st">'Smokes'</span>,<span class="st">'Hormonal Contraceptives'</span>,<span class="st">'IUD'</span>,<span class="st">'STDs'</span>],</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Percentage'</span>: [Hinselmanndata.loc[:, <span class="st">'Smokes'</span>].mean()<span class="op">*</span><span class="dv">100</span>,Hinselmanndata.loc[:,<span class="st">'Hormonal Contraceptives'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                             Hinselmanndata.loc[:,<span class="st">'IUD'</span>].mean()<span class="op">*</span><span class="dv">100</span>,Hinselmanndata.loc[:,<span class="st">'STDs'</span>].mean()<span class="op">*</span><span class="dv">100</span>]})</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>noHinselmannbhrpercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Behavior'</span>: [<span class="st">'Smokes'</span>,<span class="st">'Hormonal Contraceptives'</span>,<span class="st">'IUD'</span>,<span class="st">'STDs'</span>],</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Percentage'</span>: [noHinselmanndata.loc[:, <span class="st">'Smokes'</span>].mean()<span class="op">*</span><span class="dv">100</span>,noHinselmanndata.loc[:,<span class="st">'Hormonal Contraceptives'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>                             noHinselmanndata.loc[:,<span class="st">'IUD'</span>].mean()<span class="op">*</span><span class="dv">100</span>,noHinselmanndata.loc[:,<span class="st">'STDs'</span>].mean()<span class="op">*</span><span class="dv">100</span>]})</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>X_axis <span class="op">=</span> np.arange(Hinselmannbhrpercentages.shape[<span class="dv">0</span>])</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">-</span> <span class="fl">0.2</span>, Hinselmannbhrpercentages[<span class="st">'Percentage'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'Hinselmann'</span>)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">+</span> <span class="fl">0.2</span>, noHinselmannbhrpercentages[<span class="st">'Percentage'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'No Hinselmann'</span>)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>plt.xticks(X_axis, Hinselmannbhrpercentages[<span class="st">'Behavior'</span>])</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="st">'vertical'</span>)</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Percent of Patients Diagnosed'</span>)</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Introduction_files/figure-html/cell-18-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>Schillerdata <span class="op">=</span> data.loc[(data[<span class="st">'Schiller'</span>]<span class="op">==</span><span class="dv">1</span>)]</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>noSchillerdata <span class="op">=</span> data.loc[(data[<span class="st">'Schiller'</span>]<span class="op">==</span><span class="dv">0</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Schillerstdpercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">'STD'</span>: [<span class="st">'condylomatosis'</span>,<span class="st">'cervical condylomatosis'</span>,<span class="st">'vaginal condylomatosis'</span>,<span class="st">'vulvo-perineal condylomatosis'</span>,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'syphilis'</span>,<span class="st">'pelvic inflammatory disease'</span>,<span class="st">'genital herpes'</span>,<span class="st">'molluscum contagiosum'</span>,<span class="st">'AIDS'</span>,<span class="st">'HIV'</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'Hepatitis B'</span>,<span class="st">'HPV'</span>],</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Percentage'</span>: [Schillerdata.loc[:, <span class="st">'STDs:condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>, Schillerdata.loc[:,<span class="st">'STDs:cervical condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                             Schillerdata.loc[:, <span class="st">'STDs:vaginal condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,Schillerdata.loc[:,<span class="st">'STDs:vulvo-perineal condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>                             Schillerdata.loc[:, <span class="st">'STDs:syphilis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,Schillerdata.loc[:,<span class="st">'STDs:pelvic inflammatory disease'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>                             Schillerdata.loc[:,<span class="st">'STDs:genital herpes'</span>].mean()<span class="op">*</span><span class="dv">100</span>,Schillerdata.loc[:,<span class="st">'STDs:molluscum contagiosum'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                             Schillerdata.loc[:, <span class="st">'STDs:AIDS'</span>].mean()<span class="op">*</span><span class="dv">100</span>,Schillerdata.loc[:,<span class="st">'STDs:HIV'</span>].mean()<span class="op">*</span><span class="dv">100</span>,Schillerdata.loc[:,<span class="st">'STDs:Hepatitis B'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                             Schillerdata.loc[:, <span class="st">'STDs:HPV'</span>].mean()<span class="op">*</span><span class="dv">100</span>]})</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>noSchillerstdpercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>              <span class="st">'STD'</span>: [<span class="st">'condylomatosis'</span>,<span class="st">'cervical condylomatosis'</span>,<span class="st">'vaginal condylomatosis'</span>,<span class="st">'vulvo-perineal condylomatosis'</span>,</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'syphilis'</span>,<span class="st">'pelvic inflammatory disease'</span>,<span class="st">'genital herpes'</span>,<span class="st">'molluscum contagiosum'</span>,<span class="st">'AIDS'</span>,<span class="st">'HIV'</span>,</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'Hepatitis B'</span>,<span class="st">'HPV'</span>],</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Percentage'</span>: [noSchillerdata.loc[:, <span class="st">'STDs:condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>, noSchillerdata.loc[:,<span class="st">'STDs:cervical condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>                             noSchillerdata.loc[:, <span class="st">'STDs:vaginal condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,noSchillerdata.loc[:,<span class="st">'STDs:vulvo-perineal condylomatosis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>                             noSchillerdata.loc[:, <span class="st">'STDs:syphilis'</span>].mean()<span class="op">*</span><span class="dv">100</span>,noSchillerdata.loc[:,<span class="st">'STDs:pelvic inflammatory disease'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>                             noSchillerdata.loc[:,<span class="st">'STDs:genital herpes'</span>].mean()<span class="op">*</span><span class="dv">100</span>,noSchillerdata.loc[:,<span class="st">'STDs:molluscum contagiosum'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>                             noSchillerdata.loc[:, <span class="st">'STDs:AIDS'</span>].mean()<span class="op">*</span><span class="dv">100</span>,noSchillerdata.loc[:,<span class="st">'STDs:HIV'</span>].mean()<span class="op">*</span><span class="dv">100</span>,noSchillerdata.loc[:,<span class="st">'STDs:Hepatitis B'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>                             noSchillerdata.loc[:, <span class="st">'STDs:HPV'</span>].mean()<span class="op">*</span><span class="dv">100</span>]})</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>X_axis <span class="op">=</span> np.arange(Schillerstdpercentages.shape[<span class="dv">0</span>])</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">-</span> <span class="fl">0.2</span>, Schillerstdpercentages[<span class="st">'Percentage'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'Schiller'</span>)</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">+</span> <span class="fl">0.2</span>, noSchillerstdpercentages[<span class="st">'Percentage'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'No Schiller'</span>)</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>plt.xticks(X_axis, Schillerstdpercentages[<span class="st">'STD'</span>])</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="st">'vertical'</span>)</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Percent of Patients Diagnosed'</span>)</span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Introduction_files/figure-html/cell-20-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>Schillerdemopercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Experience'</span>: [<span class="st">'Age'</span>, <span class="st">'Number of sexual partners'</span>, <span class="st">'First sexual intercourse'</span>,<span class="st">'Num of pregnancies'</span>],</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Average'</span>: [Schillerdata.loc[:, <span class="st">'Age'</span>].mean(), Schillerdata.loc[:,<span class="st">'Number of sexual partners'</span>].mean(),</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>                          Schillerdata.loc[:, <span class="st">'First sexual intercourse'</span>].mean(),Schillerdata.loc[:,<span class="st">'Num of pregnancies'</span>].mean()]})</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>noSchillerdemopercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Experience'</span>: [<span class="st">'Age'</span>, <span class="st">'Number of sexual partners'</span>, <span class="st">'First sexual intercourse'</span>,<span class="st">'Num of pregnancies'</span>],</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Average'</span>: [noSchillerdata.loc[:, <span class="st">'Age'</span>].mean(), noSchillerdata.loc[:,<span class="st">'Number of sexual partners'</span>].mean(),</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>                             noSchillerdata.loc[:, <span class="st">'First sexual intercourse'</span>].mean(),noSchillerdata.loc[:,<span class="st">'Num of pregnancies'</span>].mean()]})</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>X_axis <span class="op">=</span> np.arange(Schillerdemopercentages.shape[<span class="dv">0</span>])</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">-</span> <span class="fl">0.2</span>, Schillerdemopercentages[<span class="st">'Average'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'Schiller'</span>)</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">+</span> <span class="fl">0.2</span>, noSchillerdemopercentages[<span class="st">'Average'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'No Schiller'</span>)</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>plt.xticks(X_axis, Schillerdemopercentages[<span class="st">'Experience'</span>])</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="st">'vertical'</span>)</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Average Value'</span>)</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Introduction_files/figure-html/cell-21-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Schillerbhrpercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Behavior'</span>: [<span class="st">'Smokes'</span>,<span class="st">'Hormonal Contraceptives'</span>,<span class="st">'IUD'</span>,<span class="st">'STDs'</span>],</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Percentage'</span>: [Schillerdata.loc[:, <span class="st">'Smokes'</span>].mean()<span class="op">*</span><span class="dv">100</span>,Schillerdata.loc[:,<span class="st">'Hormonal Contraceptives'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                             Schillerdata.loc[:,<span class="st">'IUD'</span>].mean()<span class="op">*</span><span class="dv">100</span>,Schillerdata.loc[:,<span class="st">'STDs'</span>].mean()<span class="op">*</span><span class="dv">100</span>]})</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>noSchillerbhrpercentages <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Behavior'</span>: [<span class="st">'Smokes'</span>,<span class="st">'Hormonal Contraceptives'</span>,<span class="st">'IUD'</span>,<span class="st">'STDs'</span>],</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">'Percentage'</span>: [noSchillerdata.loc[:, <span class="st">'Smokes'</span>].mean()<span class="op">*</span><span class="dv">100</span>,noSchillerdata.loc[:,<span class="st">'Hormonal Contraceptives'</span>].mean()<span class="op">*</span><span class="dv">100</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>                             noSchillerdata.loc[:,<span class="st">'IUD'</span>].mean()<span class="op">*</span><span class="dv">100</span>,noSchillerdata.loc[:,<span class="st">'STDs'</span>].mean()<span class="op">*</span><span class="dv">100</span>]})</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>X_axis <span class="op">=</span> np.arange(Schillerbhrpercentages.shape[<span class="dv">0</span>])</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">-</span> <span class="fl">0.2</span>, Schillerbhrpercentages[<span class="st">'Percentage'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'Schiller'</span>)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>plt.bar(X_axis <span class="op">+</span> <span class="fl">0.2</span>, noSchillerbhrpercentages[<span class="st">'Percentage'</span>], <span class="fl">0.4</span>, label <span class="op">=</span> <span class="st">'No Schiller'</span>)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>plt.xticks(X_axis, Schillerbhrpercentages[<span class="st">'Behavior'</span>])</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="st">'vertical'</span>)</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Percent of Patients Diagnosed'</span>)</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Introduction_files/figure-html/cell-22-output-1.png" class="img-fluid"></p>
+</div>
+</div>
 </section>
+<section id="network-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="network-analysis">Network Analysis</h3>
+<p>Finally, I looked at how the patients that underwent the various cervical cancer tests overlapped. I created a network analysis visualization with green nodes representing patients and pink nodes representing test methods. I changed the color of the edges to represent each test so it was easy to see the relationship between the patients and the tests they underwent.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.Graph()</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>G.add_node(<span class="st">'Biopsy'</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>G.add_node(<span class="st">'Hinselmann'</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>G.add_node(<span class="st">'Schiller'</span>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>edgecolors <span class="op">=</span> []</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>nodecolors <span class="op">=</span> []</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(data.shape[<span class="dv">0</span>]):</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> data.loc[i,<span class="st">'Biopsy'</span>]:</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>        G.add_node(i)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>        G.add_edge(i, <span class="st">'Biopsy'</span>)</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> data.loc[i,<span class="st">'Hinselmann'</span>]:</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>        G.add_node(i)</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>        G.add_edge(i, <span class="st">'Hinselmann'</span>)</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> data.loc[i,<span class="st">'Schiller'</span>]:</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        G.add_node(i)</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>        G.add_edge(i, <span class="st">'Schiller'</span>)</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> G.edges:</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> j[<span class="dv">0</span>] <span class="op">==</span> <span class="st">'Biopsy'</span>:</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    edgecolors.append(<span class="st">'red'</span>)</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">elif</span> j[<span class="dv">0</span>] <span class="op">==</span> <span class="st">'Hinselmann'</span>:</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>    edgecolors.append(<span class="st">'yellow'</span>)</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">elif</span> j[<span class="dv">0</span>] <span class="op">==</span> <span class="st">'Schiller'</span>:</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>    edgecolors.append(<span class="st">'blue'</span>)</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(G.nodes)):</span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> i <span class="op">&gt;</span> <span class="dv">2</span>:</span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>        nodecolors.append(<span class="st">'green'</span>)</span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>        nodecolors.append(<span class="st">'pink'</span>)</span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>nx.draw(G, edge_color <span class="op">=</span> edgecolors, node_size <span class="op">=</span> <span class="dv">10</span>, node_color <span class="op">=</span> nodecolors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Introduction_files/figure-html/cell-23-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Performing network analysis reveals that most common test to be the Schiller test. I used three metrics to check this, degree centrality, betweenness centrality, and closeness centrality. Degree centrality measures the number of edges connected to each node. Betweenness centrality measures how often a node is part of the shortest path connecting other nodes. Closeness centrality measures how close a node is to the other nodes. Schiller has the highest value for all three so it is the most central to all the nodes.</p>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Degree Centrality'</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>C <span class="op">=</span> nx.degree_centrality(G)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Biopsy Centrality ='</span>,C[<span class="st">'Biopsy'</span>])</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Hinselmann Centrality ='</span>,C[<span class="st">'Hinselmann'</span>])</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Schiller Centrality ='</span>,C[<span class="st">'Schiller'</span>])</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Betweenness Centrality'</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> nx.betweenness_centrality(G)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Biopsy Betweeness ='</span>,B[<span class="st">'Biopsy'</span>])</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Hinselmann Betweeness ='</span>,B[<span class="st">'Hinselmann'</span>])</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Schiller Betweeness ='</span>,B[<span class="st">'Schiller'</span>])</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Closeness Centrality'</span>)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>L <span class="op">=</span> nx.closeness_centrality(G)</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Biopsy Closeness ='</span>,L[<span class="st">'Biopsy'</span>])</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Hinselmann Closeness ='</span>,L[<span class="st">'Hinselmann'</span>])</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Schiller Closeness ='</span>,L[<span class="st">'Schiller'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Degree Centrality
+Biopsy Centrality = 0.6547619047619048
+Hinselmann Centrality = 0.41666666666666663
+Schiller Centrality = 0.8809523809523809
+Betweenness Centrality
+Biopsy Betweeness = 0.31368087361552754
+Hinselmann Betweeness = 0.09700445618088799
+Schiller Betweeness = 0.6311964831697348
+Closeness Centrality
+Biopsy Closeness = 0.6
+Hinselmann Closeness = 0.4666666666666667
+Schiller Closeness = 0.8235294117647058</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<p>In this research project, I analyzed cervical cancer risk factor data in an effort to draw conclusions about what factors contribute to a patient’s risk of developing the cancer.</p>
+<p>Throughout my analysis, I did not find a stong correlation between the surveyed behaviors and risk for contracting the surveyed STDs. This was surprising. I expected to see positive correlation between the number of sexual partners someone has and the number of STDs someone is diagnosed with. I assumed the more sexual encounters one has, the more diseases one is exposed to, the more STDs one will contract, similar to the more someone drives, the more likely they are to get into a car accident, no matter how good of a driver they are. Based on the scatterplots made of the data, this was proven to not be true.</p>
+<p>The lack of correlations could be due to the limited demographic surveyed by the researchers. All the data was collected at one hospital, in a brief time period. The sample size does seem large enough to capture a complete range of responses. Another possible source of error is the data collection relies on self reporting. Sexual behaviors and sexually transmitted diseases are highly taboo subjects, survey respondents may not feel entirely comfortable reporting this kind of information about themselves and could alter the truth. If subjects volunteer to participate, there is also a particular type of person that is going to be willing to answer questions about their sexual history and this might skew the type of responses received.</p>
+<p>I also analyzed the relationship between the experiences, behaviors, and STD diagnoses of patients with whether they were tested for cervical cancer. From making bar charts, I was able to determine risk factors that made patients more likely to be tested. These factors are being diagnosed with condylomatosis, vulvo-perineal condylomatosis, or HIV, smoking and using hormonal birth control.</p>
+<p>The higher rates of smoking and STDs made sense as risk factors because both of these lead to poorer health for the patient, putting them at a greater risk for getting sick. I was surprised however by such a significant difference in rates of birth control usage, I expected to see no difference. These findings however were supported by the American Cancer Society and an article on WebMD. In an article by Kelli Miller, it is stated that taking oral contraceptives, which are hormonal, will decrease the risk of endometrial cancer and ovarian cancer, but could increase the risk of breast cancer and cervical cancer. This was shocking to read because I had never heard that discussed. Although I am not taking oral contraceptives, I do use hormonal birth control and that risk is not something I had ever had explained to me. It is important that information like this is commonly known so that patients, especially ones that already are at higher risk for cervical cancer, know all the effects of their medication.</p>
+<p>In conclusion, research into women’s sexual health is important for protecting their safety. A woman needs to be able to evaluate herself, recognize risks, and communicate with healthcare providers because often she will be the only one doing so. Being properly educated on how to protect oneself against sexually transmitted diseases, side effects of medication, and the risk factors of developing cervical cancer is a valuable skill, possibly life saving.</p>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<p>Cardoso, Jaime S., et al.&nbsp;“Cervical Cancer (Risk Factors) Data Set.” <em>UCI Machine Learning Repository</em>, University of California, Irvine, 3 Mar.&nbsp;2017, https://archive.ics.uci.edu/ml/datasets/Cervical+cancer+%28Risk+Factors%29.</p>
+<p>Levine, Hallie. “Oral Contraceptives and Cervical Cancer: What to Know.” Reviewed by Nivin Todd, <em>WebMD</em>, WebMD, 21 June 2022, https://www.webmd.com/sex/birth-control/birth-control-pills-cervical-cancer.</p>
+<p>Miller, Kelli. “Birth Control &amp; Cancer: Which Methods Raise, Lower Risk.” <em>American Cancer Society</em>, 21 Jan.&nbsp;2016, https://www.cancer.org/latest-news/birth-control-cancer-which-methods-raise-lower-risk.html.</p>
+<p>Pagán, Camille Noe. “When Doctors Downplay Women’s Health Concerns.” <em>The New York Times</em>, The New York Times, 3 May 2018, https://www.nytimes.com/2018/05/03/well/live/when-doctors-downplay-womens-health-concerns.html.</p>
+
+
 </section>
 
 </main> <!-- /main -->
